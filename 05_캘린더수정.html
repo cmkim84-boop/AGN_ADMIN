@@ -113,47 +113,53 @@
     font-weight: 700;
   }
 
-  .nav-parent-row { display: flex; align-items: stretch; border-bottom: 0.5px solid var(--shell-border); }
-  .nav-parent-row a.nav-parent-link {
-    flex: 1;
+  .nav-parent-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     padding: 16px 20px;
-    text-align: center;
     font-size: 13px;
     color: var(--shell-text-muted);
-    text-decoration: none;
+    border-bottom: 0.5px solid var(--shell-border);
+    cursor: pointer;
   }
-  .nav-parent-row a.nav-parent-link:hover { color: #fff; }
-  .nav-parent-row a.nav-parent-link.active {
-    background: var(--shell-bg-active);
-    color: #fff;
-    font-weight: 700;
+  .nav-parent-row:hover { color: #fff; }
+  .nav-parent-row .nav-parent-link {
+    color: inherit;
+    font: inherit;
   }
   .nav-toggle {
-    width: 34px;
     border: none;
     background: transparent;
-    color: var(--shell-text-muted);
+    color: inherit;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 1em;
+    line-height: 1;
+    padding: 0;
     transition: transform 0.2s;
   }
-  .nav-toggle:hover { color: #fff; }
   .nav-toggle.open { transform: rotate(180deg); }
   .submenu {
     display: none;
     flex-direction: column;
     background: rgba(0,0,0,0.15);
-    border-bottom: 0.5px solid var(--shell-border);
   }
   .submenu.open { display: flex; }
   .submenu a {
-    padding: 12px 20px 12px 36px;
+    padding: 12px 20px;
     text-align: left;
     font-size: 12px;
     color: var(--shell-text-muted);
     text-decoration: none;
+    border-bottom: none;
   }
   .submenu a:hover { color: #fff; }
+  .submenu a.active {
+    color: #fff;
+    font-weight: 700;
+    background: var(--shell-bg-active);
+  }
 
 
   .main-column {
@@ -281,13 +287,13 @@
       <a href="#">기본관리</a>
       <div class="nav-item">
         <div class="nav-parent-row">
-          <a href="00_기사리스트.html" class="nav-parent-link">뉴스관리</a>
+          <span class="nav-parent-link">뉴스관리</span>
           <button class="nav-toggle" aria-label="하위메뉴 열기">▾</button>
         </div>
         <div class="submenu">
-          <a href="#">일반뉴스</a>
-          <a href="#">프리미엄뉴스(콘텐츠 제공)</a>
-          <a href="#">영상뉴스</a>
+          <a href="00_기사리스트.html">일반뉴스</a>
+          <a href="#">프리미엄뉴스</a>
+          <a href="#">동영상뉴스</a>
           <a href="#">포토뉴스</a>
         </div>
       </div>
@@ -411,11 +417,13 @@
     showToast('"' + content + '" 일정이 수정되었습니다 (' + dateLabel + ')');
   });
 
-  document.querySelectorAll('.nav-toggle').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var submenu = btn.closest('.nav-item').querySelector('.submenu');
+  document.querySelectorAll('.nav-parent-row').forEach(function (row) {
+    row.addEventListener('click', function () {
+      var navItem = row.closest('.nav-item');
+      var submenu = navItem.querySelector('.submenu');
+      var toggleBtn = navItem.querySelector('.nav-toggle');
       submenu.classList.toggle('open');
-      btn.classList.toggle('open');
+      toggleBtn.classList.toggle('open');
     });
   });
 </script>
