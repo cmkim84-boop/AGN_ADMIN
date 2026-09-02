@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>아주경제 부산 관리페이지 - 뉴스 불러오기</title>
+<title>아주경제 부산 관리페이지 - 프리미엄뉴스</title>
 <style>
   :root {
     --border: #e2e0d8;
@@ -402,6 +402,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
     border: 0.5px solid var(--border);
     border-radius: var(--radius);
     padding: 9px 12px;
@@ -412,6 +413,13 @@
   .import-result-item.selected { border-color: var(--accent); background: var(--accent-bg); }
   .import-result-item .r-title { display: block; margin-bottom: 3px; }
   .import-result-item .r-meta { font-size: 11px; color: var(--text-muted); }
+  .import-result-item .r-body { flex: 1; min-width: 0; }
+  .btn-view-original {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 5px 10px;
+    white-space: nowrap;
+  }
   .import-empty { text-align: center; color: var(--text-muted); font-size: 12px; padding: 16px 0; }
 
   .import-pagination {
@@ -488,8 +496,8 @@
       <div class="content-inner">
 
   <div class="topbar">
-    <h1>뉴스 불러오기</h1>
-    <button class="primary" id="btnOpenImportModal">기사 가져오기</button>
+    <h1>프리미엄뉴스</h1>
+    <button class="primary" id="btnOpenImportModal">기사 불러오기</button>
   </div>
 
   <div class="filter-bar">
@@ -538,7 +546,7 @@
 <div class="modal-overlay" id="importModalOverlay">
   <div class="modal-box">
     <div class="modal-header">
-      <span>기사 가져오기</span>
+      <span>기사 불러오기</span>
       <button id="btnCloseImportModal">×</button>
     </div>
     <div class="modal-body">
@@ -817,7 +825,7 @@
 
   renderArticles();
 
-  // ── 기사 가져오기 모달 (아주경제/영상/포토 + 관련기사 팝업과 동일한 검색 UI) ──
+  // ── 기사 불러오기 모달 (아주경제/영상/포토 + 관련기사 팝업과 동일한 검색 UI) ──
   var ajuTitles = [
     '서초구, 반포동 스마트 자전거 200대 추가 도입',
     '반포바이크 이용자 한 달 만에 3만명 돌파',
@@ -966,7 +974,12 @@
       var item = document.createElement('div');
       item.className = 'import-result-item';
       if (importSelected.indexOf(c.title) !== -1) item.classList.add('selected');
-      item.innerHTML = '<span class="r-title">' + c.title + '</span><span class="r-meta">' + c.date + ' · ' + c.keywords.join(', ') + '</span>';
+      item.innerHTML =
+        '<div class="r-body">' +
+          '<span class="r-title">' + c.title + '</span>' +
+          '<span class="r-meta">' + c.date + '</span>' +
+        '</div>' +
+        '<button class="btn-view-original" type="button">원본기사보기</button>';
       item.addEventListener('click', function () {
         var pos = importSelected.indexOf(c.title);
         if (pos !== -1) {
@@ -975,6 +988,10 @@
           importSelected.push(c.title);
         }
         renderImportResults();
+      });
+      item.querySelector('.btn-view-original').addEventListener('click', function (e) {
+        e.stopPropagation();
+        showToast('"' + c.title + '" 원본 기사 페이지로 이동합니다');
       });
       importResultsList.appendChild(item);
     });
