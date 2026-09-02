@@ -349,7 +349,7 @@
   .card { border: 0.5px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
   .card-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   .card-sub { font-size: 11px; color: var(--text-muted); margin: -4px 0 8px; }
-  select, input[type="text"], input[type="number"], input[type="datetime-local"] {
+  select, input[type="text"], input[type="number"], input[type="datetime-local"], input[type="date"] {
     width: 100%;
     font-family: inherit;
     font-size: 12px;
@@ -497,6 +497,7 @@
   .modal-search-row { display: flex; gap: 8px; margin-bottom: 12px; }
   .modal-search-row select { flex: 1; margin-bottom: 0; }
   .modal-search-row button { white-space: nowrap; }
+  .range-tilde { color: var(--text-muted); font-size: 13px; flex-shrink: 0; align-self: center; }
 
   .import-results { display: flex; flex-direction: column; gap: 6px; }
   .import-result-item {
@@ -812,6 +813,20 @@
       <button id="btnCloseRelatedModal">×</button>
     </div>
     <div class="modal-body">
+      <div class="modal-search-row" style="margin-bottom:8px;">
+        <input type="date" id="relatedStartDate" style="flex:1;">
+        <span class="range-tilde">~</span>
+        <input type="date" id="relatedEndDate" style="flex:1;">
+      </div>
+      <div class="modal-search-row">
+        <select id="relatedSearchType" style="flex:0 0 90px;">
+          <option value="all">전체</option>
+          <option value="title">제목</option>
+          <option value="keyword">키워드</option>
+        </select>
+        <input type="text" id="relatedSearchInput" placeholder="검색어 입력">
+        <button id="btnRelatedSearch">검색</button>
+      </div>
       <div class="import-results" id="relatedResultsList"></div>
       <div class="import-pagination" id="relatedPagination"></div>
     </div>
@@ -1145,7 +1160,7 @@
   });
 
   // 관련기사 선택 (데모용 샘플 데이터, 10건씩 페이징, 최대 3개 선택)
-  var relatedCandidates = [
+  var relatedTitlePool = [
     '서초구, 반포동 스마트 자전거 200대 추가 도입',
     '반포바이크 이용자 한 달 만에 3만명 돌파',
     '서초구청, 자전거도로 정비 예산 확대 편성',
@@ -1171,6 +1186,23 @@
     '반포동 소상공인, 스마트시티 인프라 활용법 문의 늘어',
     '서초구, 반포동 이어 방배동에도 자전거 사업 확대'
   ];
+  var relatedKeywordPool = ['반포바이크', '스마트시티', '자전거', '서초구', '교통', '환경', '지자체'];
+
+  function fmtRelatedDate(daysAgo) {
+    var d = new Date();
+    d.setDate(d.getDate() - daysAgo);
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  var relatedCandidates = relatedTitlePool.map(function (title, i) {
+    return {
+      title: title,
+      date: fmtRelatedDate(i * 3),
+      keywords: [relatedKeywordPool[i % relatedKeywordPool.length], relatedKeywordPool[(i + 2) % relatedKeywordPool.length]]
+    };
+  });
+  var relatedFiltered = relatedCandidates.slice();
   var RELATED_PAGE_SIZE = 10;
   var relatedCurrentPage = 1;
   var relatedSelected = []; // 선택된 제목 배열 (최대 3개)
@@ -1181,6 +1213,11 @@
   var relatedSelectedCount = document.getElementById('relatedSelectedCount');
 
   function openRelatedModal() {
+    document.getElementById('relatedStartDate').value = '';
+    document.getElementById('relatedEndDate').value = '';
+    document.getElementById('relatedSearchType').value = 'all';
+    document.getElementById('relatedSearchInput').value = '';
+    relatedFiltered = relatedCandidates.slice();
     relatedCurrentPage = 1;
     renderRelatedResults();
     relatedModalOverlay.classList.add('show');
@@ -1192,17 +1229,51 @@
     if (e.target === relatedModalOverlay) relatedModalOverlay.classList.remove('show');
   });
 
+  document.getElementById('btnRelatedSearch').addEventListener('click', function () {
+    var startVal = document.getElementById('relatedStartDate').value;
+    var endVal = document.getElementById('relatedEndDate').value;
+    var searchType = document.getElementById('relatedSearchType').value;
+    var query = document.getElementById('relatedSearchInput').value.trim();
+
+    relatedFiltered = relatedCandidates.filter(function (c) {
+      if (startVal && c.date < startVal) return false;
+      if (endVal && c.date > endVal) return false;
+
+      if (query === '') return true;
+
+      if (searchType === 'title') {
+        return c.title.indexOf(query) !== -1;
+      }
+      if (searchType === 'keyword') {
+        return c.keywords.some(function (k) { return k.indexOf(query) !== -1; });
+      }
+      // 전체: 제목 또는 키워드
+      return c.title.indexOf(query) !== -1 || c.keywords.some(function (k) { return k.indexOf(query) !== -1; });
+    });
+
+    relatedCurrentPage = 1;
+    renderRelatedResults();
+
+    if (relatedFiltered.length === 0) {
+      showToast('검색 결과가 없습니다');
+    }
+  });
+
   function renderRelatedResults() {
-    var totalPages = Math.ceil(relatedCandidates.length / RELATED_PAGE_SIZE);
+    var totalPages = Math.ceil(relatedFiltered.length / RELATED_PAGE_SIZE);
     var startIdx = (relatedCurrentPage - 1) * RELATED_PAGE_SIZE;
-    var pageItems = relatedCandidates.slice(startIdx, startIdx + RELATED_PAGE_SIZE);
+    var pageItems = relatedFiltered.slice(startIdx, startIdx + RELATED_PAGE_SIZE);
 
     relatedResultsList.innerHTML = '';
-    pageItems.forEach(function (title) {
+    if (pageItems.length === 0) {
+      relatedResultsList.innerHTML = '<div class="import-empty">조건에 맞는 관련기사가 없습니다</div>';
+    }
+    pageItems.forEach(function (c) {
+      var title = c.title;
       var item = document.createElement('div');
       item.className = 'import-result-item';
       if (relatedSelected.indexOf(title) !== -1) item.classList.add('selected');
-      item.innerHTML = '<span class="r-title">' + title + '</span>';
+      item.innerHTML = '<span class="r-title">' + title + '</span><span class="r-meta">' + c.date + ' · ' + c.keywords.join(', ') + '</span>';
       item.addEventListener('click', function () {
         var pos = relatedSelected.indexOf(title);
         if (pos !== -1) {
@@ -1332,8 +1403,8 @@
 
   imgDrop.innerHTML = '<span style="font-size:11px; color:var(--text-secondary);">등록된 대표 이미지</span>';
 
-  relatedSelected.push('스마트 자전거 확대 검토, 다음 달 발표');
-  relatedSelected.push('반포동 주민 반응은 엇갈려');
+  relatedSelected.push('서초구, 반포동 스마트 자전거 200대 추가 도입');
+  relatedSelected.push('반포바이크 이용자 한 달 만에 3만명 돌파');
   renderRelatedSelectedList();
 
   document.querySelectorAll('.nav-parent-row').forEach(function (row) {
