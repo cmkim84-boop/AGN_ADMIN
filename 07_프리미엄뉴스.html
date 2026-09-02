@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>아주경제 부산 관리페이지 - 기사 리스트</title>
+<title>아주경제 부산 관리페이지 - 뉴스 불러오기</title>
 <style>
   :root {
     --border: #e2e0d8;
@@ -317,6 +317,126 @@
     opacity: 0.35;
     cursor: not-allowed;
   }
+
+  .source-tabs { display: flex; gap: 8px; }
+  .source-tab {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong);
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+  .source-tab:hover { background: var(--surface-1); }
+  .source-tab.active {
+    background: var(--text-primary);
+    color: #fff;
+    border-color: var(--text-primary);
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--surface-2);
+    border-radius: 12px;
+    width: 92%;
+    max-width: 480px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .modal-header button {
+    border: none;
+    background: none;
+    font-size: 16px;
+    color: var(--text-muted);
+    padding: 0;
+    cursor: pointer;
+  }
+  .modal-body {
+    padding: 16px;
+    overflow-y: auto;
+  }
+  .modal-body select, .modal-body input[type="text"], .modal-body input[type="date"] {
+    font-family: inherit;
+    font-size: 12px;
+    padding: 7px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    width: 100%;
+  }
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-top: 0.5px solid var(--border);
+    gap: 8px;
+  }
+  .modal-search-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .modal-search-row button { white-space: nowrap; }
+  .range-tilde { color: var(--text-muted); font-size: 13px; flex-shrink: 0; align-self: center; }
+
+  .import-results { display: flex; flex-direction: column; gap: 6px; }
+  .import-result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .import-result-item:hover { border-color: var(--accent); background: var(--accent-bg); }
+  .import-result-item.selected { border-color: var(--accent); background: var(--accent-bg); }
+  .import-result-item .r-title { display: block; margin-bottom: 3px; }
+  .import-result-item .r-meta { font-size: 11px; color: var(--text-muted); }
+  .import-empty { text-align: center; color: var(--text-muted); font-size: 12px; padding: 16px 0; }
+
+  .import-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .import-pagination button {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .import-pagination button.active {
+    background: var(--text-primary);
+    color: #fff;
+    border: none;
+  }
+  .import-pagination button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
 </style>
 </head>
 <body>
@@ -349,8 +469,8 @@
           <button class="nav-toggle open" aria-label="하위메뉴 열기">▾</button>
         </div>
         <div class="submenu open">
-          <a href="00_기사리스트.html" class="active">일반뉴스</a>
-          <a href="07_프리미엄뉴스.html">프리미엄뉴스</a>
+          <a href="00_기사리스트.html">일반뉴스</a>
+          <a href="07_프리미엄뉴스.html" class="active">프리미엄뉴스</a>
           <a href="#">동영상뉴스</a>
           <a href="#">포토뉴스</a>
         </div>
@@ -368,8 +488,8 @@
       <div class="content-inner">
 
   <div class="topbar">
-    <h1>기사 리스트</h1>
-    <button class="primary" id="btnGoRegister">+ 기사 등록</button>
+    <h1>뉴스 불러오기</h1>
+    <button class="primary" id="btnOpenImportModal">기사 가져오기</button>
   </div>
 
   <div class="filter-bar">
@@ -388,13 +508,6 @@
         <button id="btnApplyCustomDate">적용</button>
       </span>
     </div>
-    <select id="statusFilterSelect">
-      <option value="all">전체 상태</option>
-      <option value="published">발행중</option>
-      <option value="scheduled">예약발행</option>
-      <option value="draft">임시저장</option>
-      <option value="private">비공개</option>
-    </select>
   </div>
 
   <div class="table-wrap">
@@ -403,10 +516,8 @@
         <tr>
           <th class="col-no">NO</th>
           <th class="col-title">제목</th>
-          <th class="col-cat">카테고리</th>
           <th class="col-date">등록일시</th>
           <th class="col-date">수정일시</th>
-          <th class="col-status">상태</th>
           <th class="col-order">순서변경</th>
         </tr>
       </thead>
@@ -424,6 +535,42 @@
 
 </div>
 
+<div class="modal-overlay" id="importModalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>기사 가져오기</span>
+      <button id="btnCloseImportModal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="source-tabs" id="importSourceTabs" style="margin-bottom:12px;">
+        <button class="source-tab active" data-source="aju">아주경제</button>
+        <button class="source-tab" data-source="video">영상</button>
+        <button class="source-tab" data-source="photo">포토</button>
+      </div>
+      <div class="modal-search-row" style="margin-bottom:8px;">
+        <input type="date" id="importStartDate" style="flex:1;">
+        <span class="range-tilde">~</span>
+        <input type="date" id="importEndDate" style="flex:1;">
+      </div>
+      <div class="modal-search-row">
+        <select id="importSearchType" style="flex:0 0 90px;">
+          <option value="all">전체</option>
+          <option value="title">제목</option>
+          <option value="keyword">키워드</option>
+        </select>
+        <input type="text" id="importSearchInput" placeholder="검색어 입력">
+        <button id="btnImportSearch">검색</button>
+      </div>
+      <div class="import-results" id="importResultsList"></div>
+      <div class="import-pagination" id="importPagination"></div>
+    </div>
+    <div class="modal-footer">
+      <span id="importSelectedCount" style="font-size:11px; color:var(--text-muted); margin-right:auto;">0개 선택됨</span>
+      <button id="btnImportAdd" class="primary">선택한 기사 추가</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text-primary); color:#fff; padding:10px 18px; border-radius:var(--radius); font-size:13px; opacity:0; transition:opacity 0.2s, transform 0.2s; pointer-events:none; z-index:10;"></div>
 
 <script>
@@ -438,11 +585,9 @@
     }, 1800);
   }
 
-  document.getElementById('btnGoRegister').addEventListener('click', function () {
-    window.location.href = '01_기사등록.html';
+  document.getElementById('btnOpenImportModal').addEventListener('click', function () {
+    openImportModal();
   });
-
-  var statusLabel = { published: '발행중', scheduled: '예약발행', draft: '임시저장', private: '비공개' };
 
   function fmt(daysAgo, hour, min) {
     var d = new Date();
@@ -492,31 +637,17 @@
     '프로야구, 순위 경쟁 막판까지 치열'
   ];
 
-  var catPool = [
-    { cat1: '지역뉴스', cat2: '지자체의회' },
-    { cat1: '지역뉴스', cat2: '지역경제' },
-    { cat1: '지역뉴스', cat2: '인물' },
-    { cat1: '라이프', cat2: '우리동네 이야기' },
-    { cat1: '아주뉴스', cat2: '' },
-    { cat1: '포토/영상', cat2: '포토뉴스' }
-  ];
-  var statusPool = ['published', 'scheduled', 'draft', 'private'];
-
   var TOTAL_SAMPLE = 45;
   var articles = [];
   for (var gi = 0; gi < TOTAL_SAMPLE; gi++) {
-    var cat = catPool[gi % catPool.length];
     var baseTitle = titlePool[gi % titlePool.length];
     var repeatSuffix = gi >= titlePool.length ? ' (' + (Math.floor(gi / titlePool.length) + 1) + ')' : '';
     var createdDaysAgo = gi; // 0~44일 전으로 분산 (기간 필터 시연용)
     var updatedDaysAgo = Math.max(0, createdDaysAgo - (gi % 3));
     articles.push({
       title: baseTitle + repeatSuffix,
-      cat1: cat.cat1,
-      cat2: cat.cat2,
       createdAt: fmt(createdDaysAgo, 9 + (gi % 10), (gi * 7) % 60),
-      updatedAt: fmt(updatedDaysAgo, 10 + (gi % 8), (gi * 11) % 60),
-      status: statusPool[gi % statusPool.length]
+      updatedAt: fmt(updatedDaysAgo, 10 + (gi % 8), (gi * 11) % 60)
     });
   }
 
@@ -530,7 +661,6 @@
   }
 
   var periodSelect = document.getElementById('periodSelect');
-  var statusFilterSelect = document.getElementById('statusFilterSelect');
   var customDateRange = document.getElementById('customDateRange');
   var startDateInput = document.getElementById('startDate');
   var endDateInput = document.getElementById('endDate');
@@ -547,10 +677,6 @@
       renderArticles();
     }
   });
-  statusFilterSelect.addEventListener('change', function () {
-    currentPage = 1;
-    renderArticles();
-  });
   document.getElementById('btnApplyCustomDate').addEventListener('click', function () {
     if (!startDateInput.value || !endDateInput.value) {
       showToast('시작일과 종료일을 모두 선택해주세요');
@@ -562,12 +688,9 @@
 
   function getFilteredArticles() {
     var period = periodSelect.value;
-    var status = statusFilterSelect.value;
     var now = new Date();
 
     return articles.filter(function (a) {
-      if (status !== 'all' && a.status !== status) return false;
-
       if (period === 'all') return true;
 
       var created = parseDate(a.createdAt);
@@ -596,7 +719,7 @@
   }
 
   function isFiltering() {
-    return periodSelect.value !== 'all' || statusFilterSelect.value !== 'all';
+    return periodSelect.value !== 'all';
   }
 
   function renderArticles() {
@@ -605,7 +728,7 @@
     var reorderDisabled = isFiltering();
 
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">조건에 맞는 기사가 없습니다</td></tr>';
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="5">조건에 맞는 기사가 없습니다</td></tr>';
       document.getElementById('articlePagination').innerHTML = '';
       return;
     }
@@ -619,14 +742,11 @@
       var idx = startIdx + i;
       var realIdx = articles.indexOf(a);
       var tr = document.createElement('tr');
-      var catText = a.cat2 ? a.cat1 + '<br>' + a.cat2 : a.cat1;
       tr.innerHTML =
         '<td class="col-no">' + (idx + 1) + '</td>' +
         '<td class="col-title"><span class="title-cell" data-idx="' + realIdx + '">' + a.title + '</span></td>' +
-        '<td class="col-cat">' + catText + '</td>' +
         '<td class="col-date">' + a.createdAt + '</td>' +
         '<td class="col-date">' + a.updatedAt + '</td>' +
-        '<td class="col-status"><span class="badge ' + a.status + '">' + statusLabel[a.status] + '</span></td>' +
         '<td class="col-order">' +
           '<div class="order-btns">' +
             '<button class="btn-up" data-idx="' + realIdx + '" ' + (reorderDisabled || realIdx === 0 ? 'disabled' : '') + '>▲</button>' +
@@ -696,6 +816,215 @@
   }
 
   renderArticles();
+
+  // ── 기사 가져오기 모달 (아주경제/영상/포토 + 관련기사 팝업과 동일한 검색 UI) ──
+  var ajuTitles = [
+    '서초구, 반포동 스마트 자전거 200대 추가 도입',
+    '반포바이크 이용자 한 달 만에 3만명 돌파',
+    '서초구청, 자전거도로 정비 예산 확대 편성',
+    '스마트시티 시범지구 반포동 선정 배경은',
+    '서초구 교통사고 감소, 자전거 인프라 효과 분석',
+    '서울시, 자치구 스마트 모빌리티 사업 평가 착수',
+    '서초구의회, 스마트시티 조례 개정안 통과',
+    '전기자전거 배터리 화재 예방 대책 마련',
+    '서울 자치구 중 서초구 스마트시티 지수 1위',
+    '서초구, 내년도 스마트시티 예산 전년比 20% 증액',
+    '자전거 공유서비스 사고 책임 소재 논란',
+    '서초구청장, 스마트 모빌리티 해외 사례 시찰',
+    '서울시내 공유자전거 이용률 지역별 비교',
+    '서초구 스마트시티 사업, 국토부 우수사례 선정',
+    '서초구, 반포동 이어 방배동에도 자전거 사업 확대',
+    '국회, 예산안 심사 본격 착수',
+    '수출 증가세 3개월 연속 이어져',
+    '증시, 외국인 매수세에 강세'
+  ];
+  var videoTitles = [
+    '반포바이크 현장 스케치 영상',
+    '스마트시티 예산안 통과 순간 영상',
+    '반포동 주민 인터뷰 모음 영상',
+    '폭염 속 온열질환 예방법 영상',
+    '프로야구 순위 경쟁 하이라이트 영상',
+    '국회 예산안 심사 현장 영상',
+    '반포한강공원 자전거길 개통 현장 영상',
+    '서초구청장 인터뷰 영상',
+    '전기자전거 배터리 안전 점검 영상',
+    '반포바이크 앱 사용법 가이드 영상',
+    '자전거도로 정비 공사 드론 촬영 영상',
+    '서초구 스마트시티 해외 시찰 영상'
+  ];
+  var photoTitles = [
+    '반포바이크 출범식 현장 포토',
+    '반포한강공원 자전거길 포토',
+    '서초구청 스마트시티 브리핑 포토',
+    '반포동 상권 활성화 현장 포토',
+    '자전거 안전교육 현장 포토',
+    '서초구의회 조례 개정 현장 포토',
+    '반포바이크 정류소 전경 포토',
+    '스마트시티 조성 현장 포토',
+    '반포동 재건축 현장 포토',
+    '서초구 교통정책 설명회 포토'
+  ];
+  var importKeywordPool = ['반포바이크', '스마트시티', '자전거', '서초구', '교통', '환경', '지자체'];
+
+  function fmtImportDate(daysAgo) {
+    var d = new Date();
+    d.setDate(d.getDate() - daysAgo);
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  var sourcePools = { aju: ajuTitles, video: videoTitles, photo: photoTitles };
+  var sourceCandidates = {};
+  Object.keys(sourcePools).forEach(function (key) {
+    sourceCandidates[key] = sourcePools[key].map(function (title, i) {
+      return {
+        title: title,
+        date: fmtImportDate(i * 3),
+        keywords: [importKeywordPool[i % importKeywordPool.length], importKeywordPool[(i + 2) % importKeywordPool.length]]
+      };
+    });
+  });
+
+  var currentImportSource = 'aju';
+  var importFiltered = sourceCandidates.aju.slice();
+  var IMPORT_PAGE_SIZE = 10;
+  var importCurrentPage = 1;
+  var importSelected = []; // 선택된 제목 배열 (개수 제한 없음)
+
+  var importModalOverlay = document.getElementById('importModalOverlay');
+  var importResultsList = document.getElementById('importResultsList');
+  var importPagination = document.getElementById('importPagination');
+  var importSelectedCount = document.getElementById('importSelectedCount');
+
+  function openImportModal() {
+    document.querySelectorAll('#importSourceTabs .source-tab').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelector('#importSourceTabs .source-tab[data-source="aju"]').classList.add('active');
+    currentImportSource = 'aju';
+    document.getElementById('importStartDate').value = '';
+    document.getElementById('importEndDate').value = '';
+    document.getElementById('importSearchType').value = 'all';
+    document.getElementById('importSearchInput').value = '';
+    importSelected = [];
+    importFiltered = sourceCandidates[currentImportSource].slice();
+    importCurrentPage = 1;
+    renderImportResults();
+    importModalOverlay.classList.add('show');
+  }
+
+  document.getElementById('btnCloseImportModal').addEventListener('click', function () {
+    importModalOverlay.classList.remove('show');
+  });
+  importModalOverlay.addEventListener('click', function (e) {
+    if (e.target === importModalOverlay) importModalOverlay.classList.remove('show');
+  });
+
+  document.querySelectorAll('#importSourceTabs .source-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('#importSourceTabs .source-tab').forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      currentImportSource = tab.getAttribute('data-source');
+      importFiltered = sourceCandidates[currentImportSource].slice();
+      importCurrentPage = 1;
+      renderImportResults();
+    });
+  });
+
+  document.getElementById('btnImportSearch').addEventListener('click', function () {
+    var startVal = document.getElementById('importStartDate').value;
+    var endVal = document.getElementById('importEndDate').value;
+    var searchType = document.getElementById('importSearchType').value;
+    var query = document.getElementById('importSearchInput').value.trim();
+    var pool = sourceCandidates[currentImportSource];
+
+    importFiltered = pool.filter(function (c) {
+      if (startVal && c.date < startVal) return false;
+      if (endVal && c.date > endVal) return false;
+      if (query === '') return true;
+      if (searchType === 'title') return c.title.indexOf(query) !== -1;
+      if (searchType === 'keyword') return c.keywords.some(function (k) { return k.indexOf(query) !== -1; });
+      return c.title.indexOf(query) !== -1 || c.keywords.some(function (k) { return k.indexOf(query) !== -1; });
+    });
+
+    importCurrentPage = 1;
+    renderImportResults();
+
+    if (importFiltered.length === 0) {
+      showToast('검색 결과가 없습니다');
+    }
+  });
+
+  function renderImportResults() {
+    var totalPages = Math.ceil(importFiltered.length / IMPORT_PAGE_SIZE);
+    var startIdx = (importCurrentPage - 1) * IMPORT_PAGE_SIZE;
+    var pageItems = importFiltered.slice(startIdx, startIdx + IMPORT_PAGE_SIZE);
+
+    importResultsList.innerHTML = '';
+    if (pageItems.length === 0) {
+      importResultsList.innerHTML = '<div class="import-empty">조건에 맞는 기사가 없습니다</div>';
+    }
+    pageItems.forEach(function (c) {
+      var item = document.createElement('div');
+      item.className = 'import-result-item';
+      if (importSelected.indexOf(c.title) !== -1) item.classList.add('selected');
+      item.innerHTML = '<span class="r-title">' + c.title + '</span><span class="r-meta">' + c.date + ' · ' + c.keywords.join(', ') + '</span>';
+      item.addEventListener('click', function () {
+        var pos = importSelected.indexOf(c.title);
+        if (pos !== -1) {
+          importSelected.splice(pos, 1);
+        } else {
+          importSelected.push(c.title);
+        }
+        renderImportResults();
+      });
+      importResultsList.appendChild(item);
+    });
+
+    importSelectedCount.textContent = importSelected.length + '개 선택됨';
+    renderImportPagination(totalPages);
+  }
+
+  function renderImportPagination(totalPages) {
+    importPagination.innerHTML = '';
+    if (totalPages <= 1) return;
+
+    var prevBtn = document.createElement('button');
+    prevBtn.textContent = '‹';
+    prevBtn.disabled = importCurrentPage === 1;
+    prevBtn.addEventListener('click', function () { importCurrentPage -= 1; renderImportResults(); });
+    importPagination.appendChild(prevBtn);
+
+    for (var p = 1; p <= totalPages; p++) {
+      (function (p) {
+        var pageBtn = document.createElement('button');
+        pageBtn.textContent = String(p);
+        if (p === importCurrentPage) pageBtn.classList.add('active');
+        pageBtn.addEventListener('click', function () { importCurrentPage = p; renderImportResults(); });
+        importPagination.appendChild(pageBtn);
+      })(p);
+    }
+
+    var nextBtn = document.createElement('button');
+    nextBtn.textContent = '›';
+    nextBtn.disabled = importCurrentPage === totalPages;
+    nextBtn.addEventListener('click', function () { importCurrentPage += 1; renderImportResults(); });
+    importPagination.appendChild(nextBtn);
+  }
+
+  document.getElementById('btnImportAdd').addEventListener('click', function () {
+    if (importSelected.length === 0) {
+      showToast('가져올 기사를 선택해주세요');
+      return;
+    }
+    var now = new Date();
+    var nowStr = fmt(0, now.getHours(), now.getMinutes());
+    importSelected.forEach(function (title) {
+      articles.unshift({ title: title, createdAt: nowStr, updatedAt: nowStr });
+    });
+    importModalOverlay.classList.remove('show');
+    currentPage = 1;
+    renderArticles();
+    showToast(importSelected.length + '개의 기사를 가져왔습니다');
+  });
 
 
   document.querySelectorAll('.nav-parent-row').forEach(function (row) {
