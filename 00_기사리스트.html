@@ -621,7 +621,7 @@
       var tr = document.createElement('tr');
       var catText = a.cat2 ? a.cat1 + '<br>' + a.cat2 : a.cat1;
       tr.innerHTML =
-        '<td class="col-no">' + (idx + 1) + '</td>' +
+        '<td class="col-no">' + (filtered.length - idx) + '</td>' +
         '<td class="col-title"><span class="title-cell" data-idx="' + realIdx + '">' + a.title + '</span></td>' +
         '<td class="col-cat">' + catText + '</td>' +
         '<td class="col-date">' + a.createdAt + '</td>' +

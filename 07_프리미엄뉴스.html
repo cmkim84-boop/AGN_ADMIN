@@ -263,6 +263,18 @@
   th.col-date, td.col-date { width: 130px; color: var(--text-muted); font-size: 12px; }
   th.col-status, td.col-status { width: 90px; }
   th.col-order, td.col-order { width: 80px; text-align: center; }
+  th.col-del, td.col-del { width: 60px; text-align: center; }
+  .btn-delete-article {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    font-size: 14px;
+    padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn-delete-article:hover { background: var(--danger-bg); color: var(--danger-text); }
 
   .title-cell {
     overflow: hidden;
@@ -526,6 +538,7 @@
           <th class="col-title">제목</th>
           <th class="col-date">등록일시</th>
           <th class="col-date">수정일시</th>
+          <th class="col-del">삭제</th>
           <th class="col-order">순서변경</th>
         </tr>
       </thead>
@@ -541,6 +554,20 @@
     <footer class="app-footer">Copyright ⓒ 아주경제 All rights reserved.</footer>
   </div>
 
+</div>
+
+<div class="modal-overlay" id="viewArticleModalOverlay">
+  <div class="modal-box" style="max-width:520px;">
+    <div class="modal-header">
+      <span>기사 보기</span>
+      <button id="btnCloseViewArticleModal">×</button>
+    </div>
+    <div class="modal-body">
+      <h3 id="viewArticleTitle" style="margin:0 0 8px; font-size:15px; line-height:1.4;"></h3>
+      <div id="viewArticleMeta" style="font-size:11px; color:var(--text-muted); margin-bottom:14px;"></div>
+      <div id="viewArticleBody" style="font-size:13px; line-height:1.7; color:var(--text-primary); white-space:pre-line;"></div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="importModalOverlay">
@@ -736,7 +763,7 @@
     var reorderDisabled = isFiltering();
 
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="5">조건에 맞는 기사가 없습니다</td></tr>';
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">조건에 맞는 기사가 없습니다</td></tr>';
       document.getElementById('articlePagination').innerHTML = '';
       return;
     }
@@ -751,10 +778,11 @@
       var realIdx = articles.indexOf(a);
       var tr = document.createElement('tr');
       tr.innerHTML =
-        '<td class="col-no">' + (idx + 1) + '</td>' +
+        '<td class="col-no">' + (filtered.length - idx) + '</td>' +
         '<td class="col-title"><span class="title-cell" data-idx="' + realIdx + '">' + a.title + '</span></td>' +
         '<td class="col-date">' + a.createdAt + '</td>' +
         '<td class="col-date">' + a.updatedAt + '</td>' +
+        '<td class="col-del"><button class="btn-delete-article" data-idx="' + realIdx + '">×</button></td>' +
         '<td class="col-order">' +
           '<div class="order-btns">' +
             '<button class="btn-up" data-idx="' + realIdx + '" ' + (reorderDisabled || realIdx === 0 ? 'disabled' : '') + '>▲</button>' +
@@ -766,7 +794,18 @@
 
     tbody.querySelectorAll('.title-cell').forEach(function (el) {
       el.addEventListener('click', function () {
-        window.location.href = '06_기사수정.html';
+        var idx = Number(el.getAttribute('data-idx'));
+        openViewArticleModal(articles[idx]);
+      });
+    });
+
+    tbody.querySelectorAll('.btn-delete-article').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var idx = Number(btn.getAttribute('data-idx'));
+        var title = articles[idx].title;
+        articles.splice(idx, 1);
+        renderArticles();
+        showToast('"' + title + '" 기사가 삭제되었습니다');
       });
     });
 
@@ -824,6 +863,24 @@
   }
 
   renderArticles();
+
+  // ── 기사 보기 레이어팝업 ──
+  var viewArticleModalOverlay = document.getElementById('viewArticleModalOverlay');
+  document.getElementById('btnCloseViewArticleModal').addEventListener('click', function () {
+    viewArticleModalOverlay.classList.remove('show');
+  });
+  viewArticleModalOverlay.addEventListener('click', function (e) {
+    if (e.target === viewArticleModalOverlay) viewArticleModalOverlay.classList.remove('show');
+  });
+
+  function openViewArticleModal(article) {
+    document.getElementById('viewArticleTitle').textContent = article.title;
+    document.getElementById('viewArticleMeta').textContent = '등록일시 ' + article.createdAt + '  ·  수정일시 ' + article.updatedAt;
+    document.getElementById('viewArticleBody').textContent =
+      article.title + '에 대한 내용입니다.\n\n' +
+      '이 기사는 프리미엄뉴스에서 불러온 콘텐츠입니다. 상세 본문은 원본 기사 페이지에서 확인하실 수 있습니다.';
+    viewArticleModalOverlay.classList.add('show');
+  }
 
   // ── 기사 불러오기 모달 (아주경제/영상/포토 + 관련기사 팝업과 동일한 검색 UI) ──
   var ajuTitles = [
