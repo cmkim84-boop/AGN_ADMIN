@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아주경제 부산 관리페이지 - 캘린더 관리</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/calendar-list.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="logo">AGN</span>
+    <span class="divider">|</span>
+    <span class="label">관리페이지</span>
+  </div>
+  <div class="account">
+    <span class="avatar">👤</span>
+    <span class="account-name">신동규 기자</span>
+    <button class="btn-logout">로그아웃</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="site-name">아주경제 부산</div>
+      <div class="sub-label">⚙ 관리페이지</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#">기본관리</a>
+      <div class="nav-item">
+        <div class="nav-parent-row">
+          <span class="nav-parent-link">뉴스관리</span>
+          <button class="nav-toggle" aria-label="하위메뉴 열기">▾</button>
+        </div>
+        <div class="submenu">
+          <a href="00_기사리스트.html">일반뉴스</a>
+          <a href="07_프리미엄뉴스.html">프리미엄뉴스</a>
+          <a href="#">동영상뉴스</a>
+          <a href="#">포토뉴스</a>
+        </div>
+      </div>
+      <a href="02_쇼츠등록.html">쇼츠관리</a>
+      <a href="03_캘린더관리.html" class="active">캘린더관리</a>
+      <a href="#">기자관리</a>
+      <a href="#">광고관리</a>
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <main class="main-content">
+      <div class="content-inner">
+
+        <div class="topbar">
+          <h1>캘린더 관리</h1>
+          <div class="topbar-actions">
+            <button id="btnAiAddCalendar">✦ AI 캘린더 추가</button>
+            <button class="primary" id="btnAddCalendar">+ 추가</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <select id="yearSelect"></select>
+          <select id="monthSelect">
+            <option value="all">전체 월</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-no">NO</th>
+                <th class="col-date">날짜</th>
+                <th class="col-content">행사내용</th>
+                <th class="col-onoff">노출</th>
+                <th class="col-created">등록일</th>
+                <th class="col-del">관리</th>
+              </tr>
+            </thead>
+            <tbody id="calendarTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="calendarPagination"></div>
+
+      </div>
+    </main>
+    <footer class="app-footer">Copyright ⓒ 아주경제 All rights reserved.</footer>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="aiModalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>AI 캘린더 추가</span>
+      <button id="btnCloseAiModal">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div id="aiSelectPane">
+        <div class="modal-select-row">
+          <select id="aiYearSelect"></select>
+          <select id="aiMonthSelect"></select>
+        </div>
+        <div class="modal-sub-text">선택한 연월에 해당하는 지역 행사를 AI가 찾아 후보로 보여드립니다.</div>
+      </div>
+
+      <div class="ai-loading" id="aiLoading">해당 연월의 행사를 검색하는 중입니다…</div>
+
+      <div class="ai-candidates" id="aiCandidates"></div>
+
+    </div>
+    <div class="modal-footer" id="aiFooterSelect">
+      <button class="primary" id="btnAiSearch" style="margin-left:auto;">행사 찾기</button>
+    </div>
+    <div class="modal-footer" id="aiFooterResult" style="display:none;">
+      <span id="aiSelectedCount" style="font-size:11px; color:var(--text-muted); margin-right:auto;">0개 선택됨</span>
+      <button id="btnAiBack">다시 검색</button>
+      <button class="primary" id="btnAiRegister">선택 항목 일괄등록</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/common.js"></script>
+<script src="js/calendar-list.js"></script>
+
+</body>
+</html>

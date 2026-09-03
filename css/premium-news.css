@@ -1,0 +1,139 @@
+
+  .content-inner { max-width: 1200px; margin: 0; }
+
+  .filter-bar select, .filter-bar input {
+    font-family: inherit;
+    font-size: 12px;
+    padding: 7px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    background: var(--surface-2);
+  }
+
+  th.col-title, td.col-title { }
+
+  th.col-cat, td.col-cat { width: 130px; color: var(--text-secondary); }
+
+  th.col-date, td.col-date { width: 130px; color: var(--text-muted); font-size: 12px; }
+  th.col-source, td.col-source { width: 90px; }
+  .badge-source {
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 12px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  th.col-status, td.col-status { width: 90px; }
+
+  th.col-del, td.col-del { width: 60px; text-align: center; }
+
+  .btn-delete-article {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    font-size: 14px;
+    padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  .btn-delete-article:hover { background: var(--danger-bg); color: var(--danger-text); }
+
+
+  .title-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    max-width: 100%;
+    cursor: pointer;
+  }
+
+  .title-cell:hover { color: var(--accent); }
+
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .pagination button {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .pagination button.active {
+    background: var(--text-primary);
+    color: #fff;
+    border: none;
+  }
+
+  .pagination button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .modal-body select, .modal-body input[type="text"], .modal-body input[type="date"] {
+    font-family: inherit;
+    font-size: 12px;
+    padding: 7px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    width: 100%;
+  }
+
+  .btn-view-original {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 5px 10px;
+    white-space: nowrap;
+  }
+
+
+  .import-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .import-pagination button {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .import-pagination button.active {
+    background: var(--text-primary);
+    color: #fff;
+    border: none;
+  }
+
+  .import-pagination button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text-primary); color: #fff;
+    padding: 10px 18px; border-radius: var(--radius); font-size: 13px;
+    opacity: 0; transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none; z-index: 10;
+  }

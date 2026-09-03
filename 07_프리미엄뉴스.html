@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아주경제 부산 관리페이지 - 프리미엄뉴스</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/premium-news.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="logo">AGN</span>
+    <span class="divider">|</span>
+    <span class="label">관리페이지</span>
+  </div>
+  <div class="account">
+    <span class="avatar">👤</span>
+    <span class="account-name">신동규 기자</span>
+    <button class="btn-logout">로그아웃</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="site-name">아주경제 부산</div>
+      <div class="sub-label">⚙ 관리페이지</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#">기본관리</a>
+      <div class="nav-item">
+        <div class="nav-parent-row">
+          <span class="nav-parent-link">뉴스관리</span>
+          <button class="nav-toggle open" aria-label="하위메뉴 열기">▾</button>
+        </div>
+        <div class="submenu open">
+          <a href="00_기사리스트.html">일반뉴스</a>
+          <a href="07_프리미엄뉴스.html" class="active">프리미엄뉴스</a>
+          <a href="#">동영상뉴스</a>
+          <a href="#">포토뉴스</a>
+        </div>
+      </div>
+      <a href="02_쇼츠등록.html">쇼츠관리</a>
+      <a href="03_캘린더관리.html">캘린더관리</a>
+      <a href="#">기자관리</a>
+      <a href="#">광고관리</a>
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <main class="main-content">
+      <div class="content-inner">
+
+  <div class="topbar">
+    <h1>프리미엄뉴스</h1>
+    <button class="primary" id="btnOpenImportModal">기사 불러오기</button>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <select id="periodSelect">
+        <option value="all">전체 기간</option>
+        <option value="today">오늘</option>
+        <option value="week">일주일</option>
+        <option value="month">1개월</option>
+        <option value="custom">직접선택</option>
+      </select>
+      <span class="custom-date-range" id="customDateRange">
+        <input type="date" id="startDate">
+        <span class="tilde">~</span>
+        <input type="date" id="endDate">
+        <button id="btnApplyCustomDate">적용</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-no">NO</th>
+          <th class="col-title">제목</th>
+          <th class="col-source">구분</th>
+          <th class="col-date">등록일시</th>
+          <th class="col-date">수정일시</th>
+          <th class="col-del">삭제</th>
+          <th class="col-order">순서변경</th>
+        </tr>
+      </thead>
+      <tbody id="articleTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="pagination" id="articlePagination"></div>
+
+      </div>
+    </main>
+
+    <footer class="app-footer">Copyright ⓒ 아주경제 All rights reserved.</footer>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="viewArticleModalOverlay">
+  <div class="modal-box" style="max-width:520px;">
+    <div class="modal-header">
+      <span>기사 보기</span>
+      <button id="btnCloseViewArticleModal">×</button>
+    </div>
+    <div class="modal-body">
+      <h3 id="viewArticleTitle" style="margin:0 0 8px; font-size:15px; line-height:1.4;"></h3>
+      <div id="viewArticleMeta" style="font-size:11px; color:var(--text-muted); margin-bottom:14px;"></div>
+      <div id="viewArticleBody" style="font-size:13px; line-height:1.7; color:var(--text-primary); white-space:pre-line;"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="importModalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>기사 불러오기</span>
+      <button id="btnCloseImportModal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="source-tabs" id="importSourceTabs" style="margin-bottom:12px;">
+        <button class="source-tab active" data-source="aju">아주경제</button>
+        <button class="source-tab" data-source="video">영상</button>
+        <button class="source-tab" data-source="photo">포토</button>
+      </div>
+      <div class="modal-search-row" style="margin-bottom:8px;">
+        <input type="date" id="importStartDate" style="flex:1;">
+        <span class="range-tilde">~</span>
+        <input type="date" id="importEndDate" style="flex:1;">
+      </div>
+      <div class="modal-search-row">
+        <select id="importSearchType" style="flex:0 0 90px;">
+          <option value="all">전체</option>
+          <option value="title">제목</option>
+          <option value="keyword">키워드</option>
+        </select>
+        <input type="text" id="importSearchInput" placeholder="검색어 입력">
+        <button id="btnImportSearch">검색</button>
+      </div>
+      <div class="import-results" id="importResultsList"></div>
+      <div class="import-pagination" id="importPagination"></div>
+    </div>
+    <div class="modal-footer">
+      <span id="importSelectedCount" style="font-size:11px; color:var(--text-muted); margin-right:auto;">0개 선택됨</span>
+      <button id="btnImportAdd" class="primary">선택한 기사 추가</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/common.js"></script>
+<script src="js/premium-news.js"></script>
+
+</body>
+</html>

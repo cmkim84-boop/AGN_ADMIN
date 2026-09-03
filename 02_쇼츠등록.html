@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아주경제 부산 관리페이지 - 쇼츠 등록</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/shorts-register.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="logo">AGN</span>
+    <span class="divider">|</span>
+    <span class="label">관리페이지</span>
+  </div>
+  <div class="account">
+    <span class="avatar">👤</span>
+    <span class="account-name">신동규 기자</span>
+    <button class="btn-logout">로그아웃</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="site-name">아주경제 부산</div>
+      <div class="sub-label">⚙ 관리페이지</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#">기본관리</a>
+      <div class="nav-item">
+        <div class="nav-parent-row">
+          <span class="nav-parent-link">뉴스관리</span>
+          <button class="nav-toggle" aria-label="하위메뉴 열기">▾</button>
+        </div>
+        <div class="submenu">
+          <a href="00_기사리스트.html">일반뉴스</a>
+          <a href="07_프리미엄뉴스.html">프리미엄뉴스</a>
+          <a href="#">동영상뉴스</a>
+          <a href="#">포토뉴스</a>
+        </div>
+      </div>
+      <a href="02_쇼츠등록.html" class="active">쇼츠관리</a>
+      <a href="03_캘린더관리.html">캘린더관리</a>
+      <a href="#">기자관리</a>
+      <a href="#">광고관리</a>
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <main class="main-content">
+
+<div class="page">
+
+  <div class="topbar">
+    <div class="topbar-title">
+      <h1>쇼츠 등록</h1>
+      <span class="count-badge" id="countBadge">0 / 10</span>
+    </div>
+    <button class="primary" id="btnAddShorts">+ 쇼츠 추가</button>
+  </div>
+  <p style="font-size:12px; color:var(--text-muted); margin:0 0 4px;">메인페이지 쇼츠 영역에는 최소 5개, 최대 10개까지 노출됩니다.</p>
+
+  <div class="warning-banner" id="warningBanner"></div>
+
+  <div class="shorts-list" id="shortsListEl"></div>
+
+  <div class="bottom-actions">
+    <button id="btnCancel">취소</button>
+    <button id="btnRegister" class="primary">등록</button>
+  </div>
+
+</div>
+
+    </main>
+    <footer class="app-footer">Copyright ⓒ 아주경제 All rights reserved.</footer>
+  </div>
+
+</div>
+
+<!-- 쇼츠 추가 모달 -->
+<div class="modal-overlay" id="addModalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>쇼츠 추가</span>
+      <button id="btnCloseAddModal">×</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabAju" data-tab="aju">ABC에서 가져오기</button>
+      <button class="modal-tab" id="tabKeyword" data-tab="keyword">키워드</button>
+      <button class="modal-tab" id="tabDirect" data-tab="direct">직접입력</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="tab-pane active" id="paneAju">
+        <div class="card-sub" style="margin-bottom:10px;">ABC 채널의 최신 영상을 최신순으로 불러옵니다.</div>
+        <div class="import-results" id="shortsResultsList"></div>
+        <div class="import-pagination" id="shortsResultsPagination"></div>
+      </div>
+
+      <div class="tab-pane" id="paneKeyword">
+        <div class="modal-search-row">
+          <input type="text" id="keywordInput" placeholder="예: 반포 자전거, 스마트시티">
+          <button id="btnKeywordGenerate">자동 생성</button>
+        </div>
+        <div class="keyword-loading" id="keywordLoading">쇼츠 후보를 불러오는 중입니다…</div>
+        <div class="keyword-results-head" id="keywordResultsHead">
+          <span id="keywordResultsCount"></span>
+          <button id="btnAddSelectedKeyword" class="primary" style="font-size:11px; padding:5px 10px;">선택한 쇼츠 추가 (0)</button>
+        </div>
+        <div class="keyword-results-list" id="keywordResultsGrid"></div>
+      </div>
+
+      <div class="tab-pane" id="paneDirect">
+        <div class="card-sub" style="margin-bottom:10px;">쇼츠 영상 주소(URL)를 직접 입력해 등록합니다.</div>
+        <div class="modal-search-row">
+          <input type="text" id="directUrlInput" placeholder="https://...">
+          <button id="btnDirectAdd" class="primary">추가</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="previewModalOverlay">
+  <div class="modal-box" style="max-width:280px;">
+    <div class="modal-header">
+      <span>쇼츠 미리보기</span>
+      <button id="btnClosePreviewModal">×</button>
+    </div>
+    <div class="modal-body" style="padding:16px;">
+      <div class="preview-thumb" id="previewThumb"></div>
+      <p class="preview-title" id="previewTitle"></p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/common.js"></script>
+<script src="js/shorts-register.js"></script>
+
+</body>
+</html>

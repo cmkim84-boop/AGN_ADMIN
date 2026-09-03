@@ -1,0 +1,75 @@
+
+  .content-inner { max-width: 640px; margin: 0; }
+
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+
+  .card {
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+
+  .card-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+
+  textarea, input[type="text"], input[type="date"], input[type="time"] {
+    width: 100%;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 9px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+  }
+
+  textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+
+  .checkbox-row input { width: auto; }
+
+
+  .date-range-row, .time-range-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .date-range-row input, .time-range-row input { flex: 1; min-width: 0; }
+
+  .range-tilde { color: var(--text-muted); font-size: 13px; flex-shrink: 0; }
+
+
+  .field-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text-primary); color: #fff;
+    padding: 10px 18px; border-radius: var(--radius); font-size: 13px;
+    opacity: 0; transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none; z-index: 10;
+  }

@@ -1,0 +1,180 @@
+
+  .content-inner { max-width: 1200px; margin: 0; }
+
+
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 10px 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-1);
+  }
+
+
+  select {
+    font-family: inherit;
+    font-size: 12px;
+    padding: 7px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    background: var(--surface-2);
+  }
+
+  th.col-date, td.col-date { width: 170px; color: var(--text-secondary); }
+
+  th.col-content, td.col-content { }
+
+  th.col-onoff, td.col-onoff { width: 70px; text-align: center; }
+
+  th.col-created, td.col-created { width: 140px; color: var(--text-muted); font-size: 12px; }
+
+  th.col-del, td.col-del { width: 110px; text-align: center; }
+
+
+  .content-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    max-width: 100%;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .content-row { display: flex; align-items: center; gap: 6px; min-width: 0; }
+
+  .article-link-icon {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 2px 7px;
+    border-radius: 10px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .article-link-icon:hover { text-decoration: underline; }
+
+
+  .badge { font-size: 11px; padding: 2px 9px; border-radius: 12px; white-space: nowrap; }
+
+  .badge.on { background: var(--success-bg); color: var(--success-text); }
+
+  .badge.off { background: var(--surface-1); color: var(--text-muted); border: 0.5px solid var(--border); }
+
+
+  .switch { position: relative; width: 30px; height: 17px; display: inline-block; }
+
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .pagination button {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .pagination button.active {
+    background: var(--text-primary);
+    color: #fff;
+    border: none;
+  }
+
+  .pagination button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+
+  .btn-delete {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    font-size: 14px;
+    padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  .btn-delete:hover { background: var(--danger-bg); color: var(--danger-text); }
+
+
+  .row-actions { display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+  .btn-edit {
+    font-size: 11px;
+    padding: 4px 10px;
+    color: var(--text-secondary);
+  }
+
+  .btn-edit:hover { border-color: var(--accent); color: var(--accent); }
+
+  .modal-select-row { display: flex; gap: 8px; margin-bottom: 4px; }
+
+  .modal-select-row select { flex: 1; }
+
+  .modal-sub-text { font-size: 12px; color: var(--text-muted); margin: 8px 0 0; }
+
+
+  .ai-loading { text-align: center; font-size: 12px; color: var(--text-muted); padding: 20px 0; display: none; }
+
+  .ai-loading.show { display: block; }
+
+
+  .ai-candidates { display: none; flex-direction: column; gap: 6px; }
+
+  .ai-candidates.show { display: flex; }
+
+  .ai-candidate-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    cursor: pointer;
+  }
+
+  .ai-candidate-item:hover { border-color: var(--accent); background: var(--accent-bg); }
+
+  .ai-candidate-item input { margin-top: 3px; }
+
+  .ai-candidate-item .ac-body { flex: 1; min-width: 0; }
+
+  .ai-candidate-item .ac-title { font-size: 13px; color: var(--text-primary); margin-bottom: 3px; }
+
+  .ai-candidate-item .ac-meta { font-size: 11px; color: var(--text-muted); }
+
+  .ai-candidate-item .ac-source {
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    margin-left: 6px;
+  }
+
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text-primary); color: #fff;
+    padding: 10px 18px; border-radius: var(--radius); font-size: 13px;
+    opacity: 0; transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none; z-index: 10;
+  }

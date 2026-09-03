@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아주경제 부산 관리페이지 - 기사 등록</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/article-register.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="logo">AGN</span>
+    <span class="divider">|</span>
+    <span class="label">관리페이지</span>
+  </div>
+  <div class="account">
+    <span class="avatar">👤</span>
+    <span class="account-name">신동규 기자</span>
+    <button class="btn-logout">로그아웃</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="site-name">아주경제 부산</div>
+      <div class="sub-label">⚙ 관리페이지</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#">기본관리</a>
+      <div class="nav-item">
+        <div class="nav-parent-row">
+          <span class="nav-parent-link">뉴스관리</span>
+          <button class="nav-toggle open" aria-label="하위메뉴 열기">▾</button>
+        </div>
+        <div class="submenu open">
+          <a href="00_기사리스트.html" class="active">일반뉴스</a>
+          <a href="07_프리미엄뉴스.html">프리미엄뉴스</a>
+          <a href="#">동영상뉴스</a>
+          <a href="#">포토뉴스</a>
+        </div>
+      </div>
+      <a href="02_쇼츠등록.html">쇼츠관리</a>
+      <a href="03_캘린더관리.html">캘린더관리</a>
+      <a href="#">기자관리</a>
+      <a href="#">광고관리</a>
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <main class="main-content">
+
+<div class="page">
+
+  <div class="topbar">
+    <h1>기사 등록</h1>
+    <div class="topbar-actions">
+      <button id="btnDraftSave">임시저장</button>
+      <button id="btnPreview">미리보기</button>
+      <button class="primary" id="btnPublish">발행</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- 왼쪽: 본문 영역 -->
+    <div>
+      <input type="text" class="title-input" id="titleInput" placeholder="제목을 입력하세요">
+
+      <div class="subtitle-list" id="subtitleList"></div>
+      <div class="subtitle-add-row">
+        <button id="btnAddSubtitle">+ 부제목 추가</button>
+        <span class="subtitle-count" id="subtitleCount">0 / 5</span>
+      </div>
+
+      <div class="ai-row" style="margin-top:10px;">
+        <button class="ai-btn" id="aiDraft">✦ AI 초안생성</button>
+        <button class="ai-btn" id="aiHeadline">제목 추천</button>
+      </div>
+      <div class="ai-result" id="aiResultBox"></div>
+
+      <div class="editor-shell">
+        <div class="editor-tabs">
+          <button type="button">이미지 업로드</button>
+          <button type="button">여러개 이미지 업로드</button>
+          <button type="button">파일첨부</button>
+          <button type="button">유튜브</button>
+        </div>
+        <div class="editor-toolbar">
+          <span class="tb-btn" title="소스">SRC</span>
+          <span class="tb-btn" title="문서">DOC</span>
+          <span class="tb-btn" title="미리보기">PRV</span>
+          <span class="tb-btn" title="HTML">&lt;/&gt;</span>
+          <span class="tb-divider"></span>
+          <span class="tb-btn" style="font-weight:500;" title="굵게">B</span>
+          <span class="tb-btn" style="font-style:italic;" title="기울임">I</span>
+          <span class="tb-btn" style="text-decoration:line-through;" title="취소선">S</span>
+          <span class="tb-btn" style="text-decoration:underline;" title="밑줄">U</span>
+          <span class="tb-btn" title="아래첨자">X₂</span>
+          <span class="tb-btn" title="위첨자">X²</span>
+          <span class="tb-divider"></span>
+          <span class="tb-btn" title="글머리 목록">•≡</span>
+          <span class="tb-btn" title="번호 목록">1≡</span>
+          <span class="tb-btn" title="내어쓰기">⇤</span>
+          <span class="tb-btn" title="들여쓰기">⇥</span>
+          <span class="tb-btn" title="인용구">❝</span>
+          <span class="tb-divider"></span>
+          <span class="tb-btn" title="실행취소">↺</span>
+          <span class="tb-btn" title="다시실행">↻</span>
+          <span class="tb-btn" title="찾기">⌕</span>
+          <span class="tb-btn" title="번역">가↔A</span>
+          <span class="tb-btn" title="서식지우기">⌫</span>
+        </div>
+        <div class="editor-toolbar">
+          <select class="tb-select" title="글꼴"><option>글꼴</option></select>
+          <select class="tb-select" title="크기"><option>크기</option></select>
+          <span class="tb-btn" style="color:var(--danger-text);" title="글자색">A</span>
+          <span class="tb-btn" style="background:var(--surface-1);" title="배경색">A</span>
+          <span class="tb-btn" title="표 삽입">⊞</span>
+          <span class="tb-divider"></span>
+          <span class="tb-btn" title="이모티콘">☺</span>
+          <span class="tb-btn" title="특수문자">Ω</span>
+          <span class="tb-btn" title="목록삽입">≣</span>
+          <span class="tb-divider"></span>
+          <span class="tb-btn" title="링크">⛓</span>
+          <span class="tb-btn" title="링크해제">⛓̸</span>
+          <span class="tb-btn" title="플래그">⚑</span>
+          <span class="tb-divider"></span>
+          <span class="tb-btn" title="왼쪽정렬">≡L</span>
+          <span class="tb-btn" title="가운데정렬">≡C</span>
+          <span class="tb-btn" title="오른쪽정렬">≡R</span>
+          <span class="tb-btn" title="양쪽정렬">≡J</span>
+          <span class="tb-divider"></span>
+          <span class="tb-btn" title="전체화면">⤢</span>
+          <span class="tb-btn tb-ai" title="AI 글쓰기 도우미">AI</span>
+        </div>
+        <textarea class="editor-textarea" id="bodyEditor" placeholder="본문을 입력하세요"></textarea>
+      </div>
+
+      <div class="ai-row" style="margin-top:10px;">
+        <button class="ai-btn" id="aiPolish">기사 다듬기</button>
+      </div>
+      <div class="ai-row" style="margin-top:6px;">
+        <button class="ai-btn" id="aiCopyedit">교열 검사</button>
+      </div>
+    </div>
+
+    <!-- 오른쪽: 발행 설정 사이드바 -->
+    <div>
+      <div class="card">
+        <div class="card-label">발행 상태</div>
+        <select id="statusSelect">
+          <option value="draft">임시저장</option>
+          <option value="scheduled">예약발행</option>
+          <option value="published">발행</option>
+          <option value="private">비공개</option>
+        </select>
+        <div class="schedule-field" id="scheduleField">
+          <input type="datetime-local" id="scheduleInput">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">기자</div>
+        <div class="tag-box" id="journalistBox"></div>
+        <div class="tag-input-row">
+          <select id="journalistSelect">
+            <option value="">기자 선택</option>
+            <option value="손흥민">손흥민</option>
+            <option value="이강인">이강인</option>
+            <option value="김민재">김민재</option>
+            <option value="황희찬">황희찬</option>
+          </select>
+          <button id="btnAddJournalist">추가</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">뉴스 형태</div>
+        <select id="newsTypeSelect">
+          <option value="general">일반</option>
+          <option value="photo">포토</option>
+          <option value="video">동영상뉴스</option>
+        </select>
+        <div class="badge-preview" id="typeBadgePreview"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">카테고리</div>
+        <select id="category1Select">
+          <option value="">1차 카테고리 선택</option>
+          <option value="local">지역뉴스</option>
+          <option value="life">라이프</option>
+        </select>
+        <select id="category2Select" disabled>
+          <option value="">2차 카테고리 선택</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <div class="card-label">대표 이미지</div>
+        <div class="img-drop" id="imgDrop">🖼</div>
+        <input type="file" id="imgFile" accept="image/*" style="display:none;">
+      </div>
+
+      <div class="card">
+        <div class="card-label">관련기사</div>
+        <div class="toggle-row">
+          <div>
+            <span class="toggle-label">관련기사</span>
+            <span class="toggle-sub">본문 하단 노출</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleRelated" checked>
+            <span class="switch-track"></span>
+          </label>
+        </div>
+        <div id="relatedPickerArea">
+          <button id="btnPickRelated" class="ai-keyword-btn" style="width:100%; margin-top:8px;">기사 선택</button>
+          <div class="related-selected-list" id="relatedSelectedList"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">키워드 / 태그</div>
+        <div class="tag-box" id="tagBox"></div>
+        <div class="tag-input-row">
+          <input type="text" id="tagInput" placeholder="태그 입력 후 Enter">
+          <button id="btnAiKeyword" class="ai-keyword-btn">✦ AI 키워드</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">아주경제 및 다국어 배포</div>
+        <label class="checkbox-row"><input type="checkbox" id="transAju"> 아주경제</label>
+        <label class="checkbox-row"><input type="checkbox" id="transAjp"> AJP</label>
+        <label class="checkbox-row"><input type="checkbox" id="transDaily"> 아주일보</label>
+        <label class="checkbox-row"><input type="checkbox" id="transVn"> 베트남</label>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    </main>
+    <footer class="app-footer">Copyright ⓒ 아주경제 All rights reserved.</footer>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="relatedModalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>관련기사 선택 (최대 3개)</span>
+      <button id="btnCloseRelatedModal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-search-row" style="margin-bottom:8px;">
+        <input type="date" id="relatedStartDate" style="flex:1;">
+        <span class="range-tilde">~</span>
+        <input type="date" id="relatedEndDate" style="flex:1;">
+      </div>
+      <div class="modal-search-row">
+        <select id="relatedSearchType" style="flex:0 0 90px;">
+          <option value="all">전체</option>
+          <option value="title">제목</option>
+          <option value="keyword">키워드</option>
+        </select>
+        <input type="text" id="relatedSearchInput" placeholder="검색어 입력">
+        <button id="btnRelatedSearch">검색</button>
+      </div>
+      <div class="import-results" id="relatedResultsList"></div>
+      <div class="import-pagination" id="relatedPagination"></div>
+    </div>
+    <div class="modal-footer">
+      <span id="relatedSelectedCount" style="font-size:11px; color:var(--text-muted); margin-right:auto;">0 / 3 선택됨</span>
+      <button id="btnRelatedDone" class="primary">완료</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/common.js"></script>
+<script src="js/article-register.js"></script>
+
+</body>
+</html>

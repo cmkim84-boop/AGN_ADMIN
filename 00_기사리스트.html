@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아주경제 부산 관리페이지 - 기사 리스트</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/article-list.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="logo">AGN</span>
+    <span class="divider">|</span>
+    <span class="label">관리페이지</span>
+  </div>
+  <div class="account">
+    <span class="avatar">👤</span>
+    <span class="account-name">신동규 기자</span>
+    <button class="btn-logout">로그아웃</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="site-name">아주경제 부산</div>
+      <div class="sub-label">⚙ 관리페이지</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#">기본관리</a>
+      <div class="nav-item">
+        <div class="nav-parent-row">
+          <span class="nav-parent-link">뉴스관리</span>
+          <button class="nav-toggle open" aria-label="하위메뉴 열기">▾</button>
+        </div>
+        <div class="submenu open">
+          <a href="00_기사리스트.html" class="active">일반뉴스</a>
+          <a href="07_프리미엄뉴스.html">프리미엄뉴스</a>
+          <a href="#">동영상뉴스</a>
+          <a href="#">포토뉴스</a>
+        </div>
+      </div>
+      <a href="02_쇼츠등록.html">쇼츠관리</a>
+      <a href="03_캘린더관리.html">캘린더관리</a>
+      <a href="#">기자관리</a>
+      <a href="#">광고관리</a>
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <main class="main-content">
+      <div class="content-inner">
+
+  <div class="topbar">
+    <h1>기사 리스트</h1>
+    <button class="primary" id="btnGoRegister">+ 기사 등록</button>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <select id="periodSelect">
+        <option value="all">전체 기간</option>
+        <option value="today">오늘</option>
+        <option value="week">일주일</option>
+        <option value="month">1개월</option>
+        <option value="custom">직접선택</option>
+      </select>
+      <span class="custom-date-range" id="customDateRange">
+        <input type="date" id="startDate">
+        <span class="tilde">~</span>
+        <input type="date" id="endDate">
+        <button id="btnApplyCustomDate">적용</button>
+      </span>
+    </div>
+    <select id="statusFilterSelect">
+      <option value="all">전체 상태</option>
+      <option value="published">발행중</option>
+      <option value="scheduled">예약발행</option>
+      <option value="draft">임시저장</option>
+      <option value="private">비공개</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-no">NO</th>
+          <th class="col-title">제목</th>
+          <th class="col-cat">카테고리</th>
+          <th class="col-date">등록일시</th>
+          <th class="col-date">수정일시</th>
+          <th class="col-status">상태</th>
+          <th class="col-order">순서변경</th>
+        </tr>
+      </thead>
+      <tbody id="articleTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="pagination" id="articlePagination"></div>
+
+      </div>
+    </main>
+
+    <footer class="app-footer">Copyright ⓒ 아주경제 All rights reserved.</footer>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/common.js"></script>
+<script src="js/article-list.js"></script>
+
+</body>
+</html>

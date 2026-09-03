@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아주경제 부산 관리페이지 - 캘린더 추가</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/calendar-add.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="logo">AGN</span>
+    <span class="divider">|</span>
+    <span class="label">관리페이지</span>
+  </div>
+  <div class="account">
+    <span class="avatar">👤</span>
+    <span class="account-name">신동규 기자</span>
+    <button class="btn-logout">로그아웃</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="site-name">아주경제 부산</div>
+      <div class="sub-label">⚙ 관리페이지</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#">기본관리</a>
+      <div class="nav-item">
+        <div class="nav-parent-row">
+          <span class="nav-parent-link">뉴스관리</span>
+          <button class="nav-toggle" aria-label="하위메뉴 열기">▾</button>
+        </div>
+        <div class="submenu">
+          <a href="00_기사리스트.html">일반뉴스</a>
+          <a href="07_프리미엄뉴스.html">프리미엄뉴스</a>
+          <a href="#">동영상뉴스</a>
+          <a href="#">포토뉴스</a>
+        </div>
+      </div>
+      <a href="02_쇼츠등록.html">쇼츠관리</a>
+      <a href="03_캘린더관리.html" class="active">캘린더관리</a>
+      <a href="#">기자관리</a>
+      <a href="#">광고관리</a>
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <main class="main-content">
+      <div class="content-inner">
+
+        <div class="topbar">
+          <h1>캘린더 추가</h1>
+          <div class="topbar-actions">
+            <button id="btnCancel">취소</button>
+            <button class="primary" id="btnSubmit">등록</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">행사내용</div>
+          <textarea id="contentInput" placeholder="행사 내용을 입력하세요"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-label">날짜</div>
+          <label class="checkbox-row">
+            <input type="checkbox" id="singleDayCheck" checked>
+            하루짜리 행사
+          </label>
+          <div class="date-range-row">
+            <input type="date" id="startDateInput">
+            <span class="range-tilde" id="dateTilde" style="display:none;">~</span>
+            <input type="date" id="endDateInput" style="display:none;">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">시간</div>
+          <div class="time-range-row">
+            <input type="time" id="startTimeInput">
+            <span class="range-tilde">~</span>
+            <input type="time" id="endTimeInput">
+          </div>
+          <div class="field-sub">종일 진행되는 행사는 비워두셔도 됩니다.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">관련 기사 링크</div>
+          <input type="text" id="articleUrlInput" placeholder="https://... (해당 행사와 관련된 기사가 있으면 입력)">
+          <div class="field-sub">선택 입력 항목입니다. 입력하면 목록에서 기사 아이콘으로 표시됩니다.</div>
+        </div>
+
+      </div>
+    </main>
+    <footer class="app-footer">Copyright ⓒ 아주경제 All rights reserved.</footer>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/common.js"></script>
+<script src="js/calendar-add.js"></script>
+
+</body>
+</html>
